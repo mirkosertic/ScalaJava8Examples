@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TestClass {
@@ -32,7 +33,19 @@ public class TestClass {
     }
 
     public void funTest2() {
+
+        // Java8 Lambda
         TestInterface2 theTestFun = (T,V) -> "First "+T+V;
+
+
+        // Old Style
+        TestInterface2 theTestFun22 = new TestInterface2() {
+            @Override
+            public String compute(String aValue, int aOtherValue) {
+                return "First "+aValue+aOtherValue;
+            }
+        };
+
         System.out.println(theTestFun.compute("First",17));
     }
 
@@ -56,7 +69,15 @@ public class TestClass {
     public void supplierTest() {
         // Infinite Stream
         Stream.generate(() -> Math.random()).limit(4).forEach(System.out::println);
+        Stream.generate(Math::random).limit(4).forEach(System.out::println);
+    }
 
+    public void groupTest() {
+        List<String> theData = Arrays.asList(new String[] {"Mirko", "Klaus", "Beat", "Marianne", "Bertram"});
+
+        theData.stream().collect(Collectors.groupingBy(T -> T.substring(0, 1))).forEach((aKey, aValues) -> {
+            System.out.println(aKey+" = "+aValues.size());
+        });
     }
 
     public static void main(String[] args) {
@@ -70,5 +91,6 @@ public class TestClass {
         theClass.funTest4();
         theClass.consumerTest();
         theClass.supplierTest();
+        theClass.groupTest();
     }
 }
